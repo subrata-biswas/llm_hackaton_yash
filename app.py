@@ -1,31 +1,61 @@
 import streamlit as st
+import pandas as pd
+from PIL import Image
 
+
+# Function to display the User Info and Profile Upload page
+def user_info_page():
+    st.header("User Information and Profile Picture")
+
+    with st.form("user_info_form", clear_on_submit=True):
+        username = st.text_input("Username")
+        email = st.text_input("Email")
+        bio = st.text_area("Bio")
+        profile_pic = st.file_uploader("Upload a profile picture", type=['png', 'jpg', 'jpeg'])
+
+        submitted = st.form_submit_button("Submit")
+        if submitted:
+            st.success("User Information Submitted Successfully!")
+            if profile_pic is not None:
+                st.image(profile_pic, caption='Uploaded Profile Picture.', use_column_width=True)
+
+
+# Function to display the Chat Interface page
+def chat_interface_page():
+    st.header("Chat Interface")
+    st.write("This is a simple chat interface.")
+
+    # Initialize chat history
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    # Display chat messages from history on app rerun
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # React to user input
+    if prompt := st.chat_input("What is up?"):
+        # Display user message in chat message container
+        st.chat_message("user").markdown(prompt)
+        # Add user message to chat history
+        st.session_state.messages.append({"role": "user", "content": prompt})
+
+        response = f"Echo: {prompt}"
+        # Display assistant response in chat message container
+        with st.chat_message("assistant"):
+            st.markdown(response)
+        # Add assistant response to chat history
+        st.session_state.messages.append({"role": "assistant", "content": response})
 
 def main():
-    st.title('File Upload and Display App')
+    st.sidebar.title("Navigation")
+    app_mode = st.sidebar.radio("Go to", ["User Info and Profile Upload", "Chat Interface"])
 
-    uploaded_file = st.file_uploader("Choose a file", type=['csv', 'xlsx', 'txt', 'pdf', 'png', 'jpg', 'jpeg'])
-    if uploaded_file is not None:
-        file_details = {"FileName": uploaded_file.name, "FileType": uploaded_file.type, "FileSize": uploaded_file.size}
-        st.write(file_details)
-
-        # Display the content of the file
-        if uploaded_file.type == "text/csv" or uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-            # For CSV or Excel file
-            df = pd.read_csv(uploaded_file)
-            st.dataframe(df)
-        elif uploaded_file.type == "text/plain":
-            # For text file
-            text = str(uploaded_file.read(), "utf-8")
-            st.text(text)
-        elif uploaded_file.type == "application/pdf":
-            # For PDF file
-            st.write("PDF file cannot be displayed directly. Please download the file to view.")
-        elif uploaded_file.type in ["image/png", "image/jpeg", "image/jpg"]:
-            # For images
-            st.image(uploaded_file.read(), caption='Uploaded Image.', use_column_width=True)
-        else:
-            st.write("This file type is not supported for display")
+    if app_mode == "User Info and Profile Upload":
+        user_info_page()
+    elif app_mode == "Chat Interface":
+        chat_interface_page()
 
 
 if __name__ == "__main__":
