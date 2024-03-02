@@ -30,5 +30,11 @@ class MyTestCase(unittest.TestCase):
         info.set_user_daily_calorie_burn(2000)
         self.assertEqual(info.populate_calorie_burn_info(), "On average, this patient burns 2000 calories per day.")
 
+    def test_user_question_prompt(self):
+        user_question = "What should I eat?"
+        info = user_info.UserInfo(1)
+        info.add_user_question(user_question)
+        self.assertEqual(info.populate_user_questions(), "The user has the following question:\nWhat should I eat?")
+
 if __name__ == '__main__':
     unittest.main()
