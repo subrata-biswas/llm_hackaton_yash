@@ -3,6 +3,7 @@ from datetime import datetime
 class UserInfo:
     def __init__(self, user_id):
         self.user_id = user_id
+        self.user_questions = []
 
     def get_user_id(self):
         return self.user_id
@@ -43,6 +44,9 @@ class UserInfo:
     def get_user_daily_calorie_burn(self):
         return self.calorie_burn
 
+    def add_user_question(self, question):
+        self.user_questions.append(question)
+
     def populate_age_info(self):
         age = self.calculate_age(self.get_user_birthdate())
         return (f"They are {age} {self.year_or_years(age)} old.")
@@ -59,10 +63,24 @@ class UserInfo:
     def populate_calorie_burn_info(self):
         return (f"On average, this patient burns {self.get_user_daily_calorie_burn()} calories per day.")
 
+    def populate_user_questions(self):
+        questions_string = ""
+        if len(self.user_questions):
+            questions_string = f"The user has the following {self.question_or_questions(self.user_questions)}:"
+            for question in self.user_questions:
+                questions_string += "\n" + question
+
+        return questions_string
+
     def populate_user_info(self):
         age = self.calculate_age(self.get_user_birthdate())
-        return "There is a patient." + " " + self.populate_age_info() + " " + self.populate_height_info() + " " + self.populate_weight_info() + " " + self.populate_calorie_burn_info() + " " + self.populate_calorie_consumption_info()
-    from datetime import datetime
+        user_info = "There is a patient." + " " + self.populate_age_info() + " " + self.populate_height_info() +\
+            " " + self.populate_weight_info() + " " + self.populate_calorie_burn_info() +\
+            " " + self.populate_calorie_consumption_info()
+        if self.populate_user_questions() != "":
+            user_info += " " + self.populate_user_questions()
+
+        return user_info
 
     @staticmethod
     def calculate_age(birthdate):
@@ -81,8 +99,14 @@ class UserInfo:
         else:
             return "years"
 
+    @staticmethod
+    def question_or_questions(questions):
+        if len(questions) == 1:
+            return "question"
+        else:
+            return "questions"
 
-"""
+
 a = UserInfo(1)
 a.set_user_name("John Doe")
 a.set_user_birthdate("1990-01-01")
@@ -90,5 +114,5 @@ a.set_user_height(180)
 a.set_user_weight(80)
 a.set_user_daily_calorie_intake(2000)
 a.set_user_daily_calorie_burn(2500)
+a.add_user_question("What should I eat?")
 print(a.populate_user_info())
-"""
