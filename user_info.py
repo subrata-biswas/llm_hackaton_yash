@@ -3,6 +3,12 @@ from datetime import datetime
 class UserInfo:
     def __init__(self, user_id):
         self.user_id = user_id
+        self.name = ""
+        self.birthdate = "1990-01-01"
+        self.height = 0
+        self.weight = 0
+        self.calorie_intake = 0
+        self.calorie_burn = 0
         self.user_questions = []
 
     def get_user_id(self):
@@ -105,14 +111,3 @@ class UserInfo:
             return "question"
         else:
             return "questions"
-
-
-a = UserInfo(1)
-a.set_user_name("John Doe")
-a.set_user_birthdate("1990-01-01")
-a.set_user_height(180)
-a.set_user_weight(80)
-a.set_user_daily_calorie_intake(2000)
-a.set_user_daily_calorie_burn(2500)
-a.add_user_question("What should I eat?")
-print(a.populate_user_info())
