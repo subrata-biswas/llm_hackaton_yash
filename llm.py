@@ -63,9 +63,7 @@ def llm(prompt):
             ),
         ),
     ]
-    
-    
-    
+
     llm = OpenAI(model="gpt-3.5-turbo-0613")
     
     agent = ReActAgent.from_tools(
