@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 import user_info
+import llm
 
 def extract_user_info(lines):
     st.write("user_name", lines[0].strip().decode('utf-8'))
@@ -74,7 +75,7 @@ def chat_interface_page(user_info):
 
         set_user_info(prompt, user_info)
 
-        response = f"{user_info.populate_user_info()}"
+        response = f"{llm.llm(user_info.populate_user_info())}"
         # Display assistant response in chat message container
         with st.chat_message("assistant"):
             st.markdown(response)
